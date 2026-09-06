@@ -1,0 +1,678 @@
+/* ==========================================================================
+   1. TIPOGRAFÍA
+   Cormorant Garamond → identidad / títulos.  Montserrat → interfaz / datos.
+   Se cargan de Google Fonts porque este archivo corre en el navegador del
+   usuario final (con conexión normal); si se usa sin internet, el sistema
+   cae a las tipografías de respaldo declaradas en cada variable.
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* ==========================================================================
+   2. VARIABLES DE MARCA — identidad visual URIZALDI (no negociable)
+   Proporción de uso objetivo: ~80% bone / 15% charcoal / 5% gold.
+   El gold NUNCA se usa como color de texto extendido, fondo de botón
+   o relleno de tarjeta: sólo como acento (líneas, el "&", folios, sellos).
+   ========================================================================== */
+:root {
+  --charcoal:      #292929;
+  --charcoal-soft: #454545;
+  --bone:          #F7F4EE;
+  --bone-light:    #FBF9F5;
+  --gold:          #C8A04A;
+  --gold-dark:     #A98234;
+  --border:        #E4E0D8;
+  --text-muted:    #77736C;
+
+  /* estado de validación — uso mínimo, sólo para avisos del sistema */
+  --error:         #A23B32;
+  --error-bg:      #FBEEEC;
+
+  --font-display: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body:    'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+
+  --radius: 2px;
+  --ticket-width: 320px; /* ancho en pantalla; el ancho físico real (80mm)
+                             se aplica sólo en impresión y PDF, ver más abajo */
+}
+
+/* ==========================================================================
+   3. RESET Y BASE
+   ========================================================================== */
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bone);
+  color: var(--charcoal);
+  font-family: var(--font-body);
+  -webkit-text-size-adjust: 100%;
+}
+body { min-height: 100vh; }
+img { max-width: 100%; display: block; }
+button { font-family: inherit; }
+
+/* Evita el zoom involuntario en iOS: todo input/select/textarea a 16px+ */
+input, select, textarea {
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+
+::selection { background: var(--gold); color: var(--charcoal); }
+
+/* ==========================================================================
+   4. ENCABEZADO DE LA APP
+   ========================================================================== */
+.app-header {
+  background: var(--charcoal);
+  color: var(--bone-light);
+  padding: 18px 20px 16px;
+  text-align: center;
+  position: relative;
+}
+.app-header__brand {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.app-header__brand span { color: var(--gold); }
+.app-header__sub {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 4px;
+  opacity: .9;
+}
+.app-header__tool {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--bone);
+  opacity: .55;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   5. LAYOUT DE DOS PANELES
+   Móvil: pestañas Formulario / Vista previa.
+   Escritorio: paneles lado a lado.
+   ========================================================================== */
+.app-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 16px 16px 60px;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.tabs button {
+  flex: 1;
+  padding: 12px 10px;
+  border: 1px solid var(--border);
+  background: var(--bone-light);
+  color: var(--charcoal-soft);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: var(--radius);
+  cursor: pointer;
+  min-height: 44px;
+}
+.tabs button.is-active {
+  background: var(--charcoal);
+  color: var(--bone-light);
+  border-color: var(--charcoal);
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.panel { display: none; }
+.panel.is-active { display: block; }
+
+@media (min-width: 900px) {
+  .tabs { display: none; }
+  .panels { grid-template-columns: minmax(0, 1fr) minmax(360px, 420px); align-items: start; }
+  .panel, .panel.is-active { display: block; }
+  .panel--preview { position: sticky; top: 20px; }
+}
+
+/* ==========================================================================
+   6. TARJETA DE FORMULARIO
+   ========================================================================== */
+.card {
+  background: var(--bone-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 18px;
+}
+
+.field-group {
+  margin-bottom: 22px;
+}
+.field-group:last-child { margin-bottom: 0; }
+
+.field-group__title {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.field-group__title::before {
+  content: "";
+  width: 5px; height: 5px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+.field:last-child { margin-bottom: 0; }
+
+.field label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.field label .opt {
+  text-transform: none;
+  letter-spacing: 0;
+  font-style: italic;
+  opacity: .8;
+}
+.field label .req { color: var(--gold-dark); margin-left: 2px; }
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--charcoal);
+  min-height: 44px;
+}
+.field textarea { min-height: 72px; resize: vertical; }
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--gold-dark);
+  box-shadow: 0 0 0 3px rgba(200,160,74,0.15);
+}
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea {
+  border-color: var(--error);
+  background: var(--error-bg);
+}
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.field-row-3 {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 420px) {
+  .field-row-3 { grid-template-columns: 1fr; }
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 5px;
+}
+
+/* interruptor "Mostrar sello PAGADO" */
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.switch-row__label {
+  font-size: 12.5px;
+  color: var(--charcoal-soft);
+}
+.switch {
+  position: relative;
+  width: 46px; height: 26px;
+  flex-shrink: 0;
+}
+.switch input { opacity: 0; width: 100%; height: 100%; margin: 0; position: absolute; cursor: pointer; z-index: 2; }
+.switch-track {
+  position: absolute; inset: 0;
+  background: var(--border);
+  border-radius: 999px;
+  transition: background .15s ease;
+}
+.switch-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,.25);
+  transition: transform .15s ease;
+}
+.switch input:checked ~ .switch-track { background: var(--charcoal); }
+.switch input:checked ~ .switch-thumb { transform: translateX(20px); }
+
+/* ==========================================================================
+   7. BOTONES DE ACCIÓN
+   ========================================================================== */
+.actions {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: opacity .15s ease, transform .05s ease;
+}
+.btn:active { transform: scale(0.99); }
+.btn-primary {
+  background: var(--charcoal);
+  color: var(--bone-light);
+  border-color: var(--charcoal);
+  position: relative;
+}
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  left: 16px; right: 16px; bottom: 6px;
+  height: 1px;
+  background: var(--gold);
+  opacity: .6;
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--charcoal);
+  border-color: var(--border);
+}
+.btn-secondary:hover { border-color: var(--charcoal-soft); }
+.btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: transparent;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  min-height: 40px;
+}
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.validation-banner {
+  display: none;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--error);
+  background: var(--error-bg);
+  color: var(--error);
+  font-size: 12px;
+  border-radius: var(--radius);
+  line-height: 1.5;
+}
+.validation-banner.is-visible { display: block; }
+.validation-banner strong { display: block; margin-bottom: 3px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 12px);
+  background: var(--charcoal);
+  color: var(--bone-light);
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  border-bottom: 2px solid var(--gold);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+  z-index: 500;
+  max-width: 90vw;
+  text-align: center;
+}
+.toast.is-visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+
+/* ==========================================================================
+   8. VISTA PREVIA — CONTENEDOR
+   ========================================================================== */
+.preview-wrap {
+  display: flex;
+  justify-content: center;
+}
+.preview-scroll {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 6px 0 2px;
+}
+
+.ticket-shadow-wrap {
+  filter: drop-shadow(0 8px 24px rgba(41,41,41,0.18)) drop-shadow(0 2px 6px rgba(41,41,41,0.10));
+}
+
+/* ==========================================================================
+   9. EL TICKET — COMPROBANTE
+   Estructura tipo recibo: 80mm de ancho físico (ver @media print y JS de
+   exportación). En pantalla se usa --ticket-width para comodidad visual,
+   manteniendo la misma proporción y jerarquía que tendrá el documento final.
+   ========================================================================== */
+.ticket {
+  width: var(--ticket-width);
+  background: var(--bone-light);
+  color: var(--charcoal);
+  font-family: var(--font-body);
+  position: relative;
+  padding: 26px 18px 20px;
+  overflow: hidden;
+}
+
+.ticket__logo {
+  display: block;
+  width: 78%;
+  max-width: 230px;
+  margin: 0 auto 14px;
+}
+.ticket__logo-fallback {
+  text-align: center;
+  margin-bottom: 14px;
+}
+.ticket__logo-fallback .uz {
+  font-family: var(--font-display);
+  font-size: 30px;
+  letter-spacing: 0.05em;
+  color: var(--charcoal);
+}
+.ticket__logo-fallback .uz b { color: var(--gold-dark); font-weight: 500; }
+.ticket__logo-fallback .name {
+  font-family: var(--font-display);
+  font-size: 19px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.ticket__logo-fallback .tag {
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.ticket__title {
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.ticket__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.ticket__meta b { color: var(--charcoal); font-weight: 600; }
+.ticket__meta-block { margin-bottom: 14px; }
+
+.ticket__divider {
+  border: none;
+  border-top: 1px dashed var(--border);
+  margin: 14px 0;
+}
+.ticket__divider--solid {
+  border-top: 1px solid var(--charcoal);
+  opacity: .08;
+}
+
+.ticket__eyebrow {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.ticket__value-lg {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--charcoal);
+  line-height: 1.25;
+}
+.ticket__value-muted {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.ticket__amount-row {
+  text-align: center;
+  padding: 6px 0 4px;
+}
+.ticket__amount {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--charcoal);
+  line-height: 1.1;
+}
+.ticket__amount-sub {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.6;
+}
+
+.ticket__balance-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-top: 4px;
+}
+.ticket__balance-row span:first-child { color: var(--text-muted); }
+.ticket__balance-row span:last-child { font-weight: 600; }
+
+.ticket__notes-label {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.ticket__notes-text {
+  font-size: 11.5px;
+  color: var(--charcoal-soft);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.ticket__status {
+  text-align: center;
+  margin: 4px 0 2px;
+  position: relative;
+  padding: 10px 0;
+}
+.ticket__status-badge {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+}
+.ticket__thanks {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.ticket__contact {
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.ticket__contact b { color: var(--charcoal-soft); font-weight: 600; }
+
+.ticket__legal {
+  margin-top: 4px;
+  text-align: center;
+}
+.ticket__legal-title {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--charcoal);
+  margin-bottom: 5px;
+}
+.ticket__legal-text {
+  font-size: 8px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* Sello / marca de agua PAGADO — se ancla sobre el bloque "Pago registrado",
+   con posición relativa al flujo del contenido (no a un pixel fijo del
+   ticket), para que funcione sin importar cuánto crezca el comprobante. */
+.ticket__stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 152px;
+  padding: 6px 4px;
+  text-align: center;
+  border: 1.5px solid var(--gold-dark);
+  border-radius: 4px;
+  color: var(--gold-dark);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.16em;
+  transform: translate(-50%, -50%) rotate(-9deg);
+  opacity: .7;
+  background: transparent;
+  pointer-events: none;
+}
+.ticket__stamp span {
+  display: block;
+  font-size: 6.5px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* Ocultar bloques vacíos por completo (colapsan sin dejar hueco) */
+.ticket [data-empty="true"] { display: none !important; }
+
+/* ==========================================================================
+   10. IMPRESIÓN
+   Oculta todo salvo el ticket; ancho físico real de 80mm; sin sombras.
+   ========================================================================== */
+@media print {
+  @page { size: 80mm auto; margin: 0; }
+  html, body {
+    background: #fff !important;
+    margin: 0; padding: 0;
+  }
+  .app-header, .tabs, .panel--form, .actions, .validation-banner, .toast,
+  .app-footer, .btn { display: none !important; }
+  .app-shell { padding: 0; margin: 0; max-width: none; }
+  .panels { display: block; }
+  .panel--preview { position: static; }
+  .preview-wrap, .preview-scroll { padding: 0; display: block; }
+  .ticket-shadow-wrap { filter: none !important; }
+  .ticket {
+    width: 80mm !important;
+    margin: 0 auto;
+    padding: 4mm 4mm 3mm;
+  }
+}
+
+/* ==========================================================================
+   11. UTILIDADES / PIE DE APP
+   ========================================================================== */
+.app-footer {
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-top: 28px;
+  line-height: 1.6;
+}
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap;
+}
+
+/* Panel de configuración del despacho (colapsable, discreto) */
+details.config-details {
+  margin-top: 18px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+details.config-details summary {
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  list-style: none;
+}
+details.config-details summary::-webkit-details-marker { display: none; }
+details.config-details summary::before {
+  content: "⚙ ";
+}
+details.config-details .field-group { margin-top: 16px; }
